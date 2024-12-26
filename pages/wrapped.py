@@ -10,7 +10,6 @@ import random
 import spotipy
 import streamlit.components.v1 as components
 from spotipy.oauth2 import SpotifyClientCredentials
-from streamlit_extras.stylable_container import stylable_container
 from streamlit_extras.add_vertical_space import add_vertical_space
 from dotenv import load_dotenv
 load_dotenv()
