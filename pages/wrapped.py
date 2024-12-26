@@ -163,7 +163,7 @@ def create_listening_clock(df):
     return fig
 
 def create_top_artists_chart(df, sp):
-    top_artists = get_top_artists(df, 10)
+    top_artists = get_top_artists(df, 10).sort_values('minutes_played', ascending=True)
     artist_images = [get_spotify_image(sp, artist) for artist in top_artists.index]
     
     fig = go.Figure()
@@ -202,7 +202,7 @@ def create_top_artists_chart(df, sp):
     return fig
 
 def create_top_songs_chart(df, sp):
-    top_songs = get_top_songs(df, 10)
+    top_songs = get_top_songs(df, 10).sort_values('minutes_played', ascending=True)
     song_images = [get_spotify_image(sp, song, 'track') for song in top_songs['master_metadata_track_name']]
     
     fig = go.Figure()
@@ -248,11 +248,11 @@ def create_features_radar(df):
     
     colors = {
         'danceability': '#FF6B6B',
-        'energy': '#4ECDC4',
+        'energy': '#4ECDFF',
         'valence': '#FFD93D',
         'speechiness': '#95E1D3',
-        'acousticness': '#A8E6CF',
-        'instrumentalness': '#FF8B94'
+        'acousticness': '#F5aA7B',
+        'instrumentalness': '#FF8BBA'
     }
     
     fig = go.Figure()
@@ -467,7 +467,7 @@ def display_music_profile_analysis(df):
                            unsafe_allow_html=True)
 
         with col2:
-            st.markdown("#### Your Music DNA")
+            st.markdown("#### Your Music DNA 🧬")
             feature_emojis = {
                 'danceability': '💃',
                 'energy': '⚡',
@@ -557,6 +557,9 @@ def display_top_artists_player(df, sp):
         st.session_state.selected_artist_id = None
 
     st.markdown("### Top Artists")
+    st.markdown(f"""
+                <div class='sub'>ⓘ <i>Click the button bellow to change</i> <br></div>
+            """, unsafe_allow_html=True)
     cols = st.columns(8)
     
     st.markdown("""
@@ -572,7 +575,7 @@ def display_top_artists_player(df, sp):
             artist_image = get_spotify_image(sp, artist)
             
             if artist_image and artist_id:
-                if st.button("##", key=f"artist_{artist_id}", use_container_width=True):
+                if st.button("▶", key=f"artist_{artist_id}", use_container_width=True):
                     st.session_state.selected_artist_id = artist_id
                     st.rerun()
                 st.image(artist_image, width=100, use_container_width=True)
@@ -582,6 +585,12 @@ def display_top_artists_player(df, sp):
             f"https://open.spotify.com/embed/artist/{st.session_state.selected_artist_id}?utm_source=generator",
             height=352
         )
+    else:
+        components.iframe(
+            f"https://open.spotify.com/embed/artist/{artist_id}?utm_source=generator",
+            height=352
+        )
+
 
 def main():
     st.markdown("""
@@ -589,6 +598,7 @@ def main():
         .metric-value {font-size: 2.5rem; font-weight: 700; color: white; text-align: center;}
         .metric-label {font-size: 1rem; color: white; text-align: center;}
         .title{font-size: 3.5rem; font-weight: 700; color: white; text-align: left;}
+        .sub {font-size: 0.7rem; color: white; text-align: left;}
         </style>
     """, unsafe_allow_html=True)
     
@@ -606,8 +616,6 @@ def main():
     total_minutes = df['minutes_played'].sum()
     total_songs = len(df)
     total_artists = df['master_metadata_album_artist_name'].nunique()
-
-    add_vertical_space(2)
     
     # Display metrics
     cols = st.columns(3)
@@ -624,7 +632,13 @@ def main():
                 <div class='metric-value'>{value}</div>
             """, unsafe_allow_html=True)
 
+    add_vertical_space(2)
+
     st.plotly_chart(create_daily_waveform(df), use_container_width=True)
+    st.markdown(f"""
+                <div class='sub'>ⓘ <i>Total songs you played each day</i></div>
+            """, unsafe_allow_html=True)
+    add_vertical_space(2)
 
     # Listening patterns
     st.header("⏰ Your Listening Clock")
@@ -634,20 +648,23 @@ def main():
     with col2:
         display_listening_analysis(df)
 
+    add_vertical_space(2)
+
     # Top Music Section
-    st.header("🎵 Your Top Music")
-    
+    st.header("📈 Your Top Music")
     display_top_artist_and_song_section(df, sp)
     display_top_artists_player(df, sp)
 
+    add_vertical_space(2)
+
     # Audio features
     if 'audio_features_added' in st.session_state and st.session_state.audio_features_added:
-        st.header("🎵 Your Music Profile")
+        st.header("👔 Your Music Profile")
         col1, col2 = st.columns([2, 1])
         with col1:
             st.plotly_chart(create_features_radar(df), use_container_width=True)
         with col2:
-            st.markdown("#### What This Means")
+            st.markdown("#### What This Means❓")
             st.markdown("""
             - **Danceability**: How suitable for dancing
             - **Energy**: Intensity and activity level
@@ -658,6 +675,13 @@ def main():
             """)
     
     display_music_profile_analysis(df)
+
+    # Navigation button
+    st.markdown("<hr><div class='metric-value'>Want to try with different data❓</div> <br>", unsafe_allow_html=True)
+    if st.button("🔁 Use different data", use_container_width=True):
+        st.session_state.processed_data = None
+        st.session_state.audio_features_added = None
+        st.switch_page("pages/upload.py")
 
 if __name__ == "__main__":
     main()
