@@ -6,14 +6,17 @@ A Streamlit interactive application that creates your personal Spotify Wrapped d
 ```
 spotify-wrapped/
 │
-├── app.py                 # Main application file
-├── pages/                 # Streamlit pages
-│   └── wrapped.py        # Wrapped dashboard page
-├── assets/               # Static assets
-│   └── spotify.svg      # Spotify logo
-├── .env                  # Environment variables (create this)
-├── requirements.txt      # Python dependencies
-└── README.md            # This file
+├── app.py                      # Main application file
+├── pages/                 
+│   └── upload.py               # Upload dashboard page
+│   └── wrapped.py              # Wrapped dashboard page
+├── assets/               
+│   └── spotify.svg             # Spotify logo
+├── data/
+|   └── StreamingHistory.json   # Example of data
+├── .env                        # Environment variables (create this)
+├── requirements.txt            # Python dependencies
+└── README.md                   # This file
 ```
 
 ## Prerequisites
