@@ -30,7 +30,7 @@ spotify-wrapped/
 
 1. Clone the repository:
 ```bash
-git clone [this repo](https://github.com/ariziddannugraha/spotify-wrapped-streamlit.git)
+git clone https://github.com/ariziddannugraha/spotify-wrapped-streamlit.git
 cd spotify-wrapped
 ```
 
