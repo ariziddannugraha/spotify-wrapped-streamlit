@@ -96,6 +96,10 @@ streamlit run app.py
 
 Feel free to submit issues and enhancement requests.
 
+## Demo
+
+You can access a demo of this project using this link [Click Me!](https://spotify-wrapped-visdat.streamlit.app/) or type https://spotify-wrapped-visdat.streamlit.app/ in your browser
+
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
